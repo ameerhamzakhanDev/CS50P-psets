@@ -1,0 +1,15 @@
+# Daily Checkup
+#### Video Demo:  https://www.youtube.com/watch?v=3r3oSOuz7N8
+#### Description:
+
+Daily Checkup is a desktop graphical user interface (GUI) application built with Python that helps users track and maintain a daily habit. At its core, the program serves as a minimalist tracker. Users open the application daily, click a button to "check in," and the program calculates their current streak. To provide an element of daily motivation, the application also displays a randomly selected motivational quote from a local text file upon each successful check-in.
+
+The project is broken down into several distinct files. The main application logic and GUI reside in `project.py`. The `test_project.py` file contains the unit tests required by the CS50P specification, utilizing the `pytest` framework to ensure the core mathematical and string-handling logic functions flawlessly. Additionally, the project relies on two external files for data persistence: `checkin.csv`, which acts as a lightweight database tracking the days and dates the user has checked in, and `quotes.txt`, a plain text file containing a list of motivational quotes separated by line breaks.
+
+Inside `project.py`, the program execution begins with `main()`, which sequentially calls `csv_setup()` and `window_setup()`. The `csv_setup()` function safely attempts to open the `checkin.csv` file; if it throws a `FileNotFoundError`, the program handles the exception by generating a brand new CSV with proper headers and an initial day-one entry. The `window_setup()` function leverages `ttkbootstrap`, an extension of Tkinter, to build an aesthetically pleasing "journal" themed window. It establishes the labels, string variables, and the primary check-in button that users interact with.
+
+When the user clicks the check-in button, the `check_in()` function is triggered. This callback function acts as the bridge between the program's backend data and the frontend GUI. It reads the most recent entry from the CSV, calculates the date difference, generates the appropriate user feedback, updates the graphical interface, and appends a new row to the CSV if a valid daily check-in occurred.
+
+Initially, the check-in logic, date math, and message generation were tightly coupled within the GUI functions. However, relying heavily on GUI elements (like `ttk.StringVar`) made automated testing incredibly difficult. To solve this, the code was deliberately refactored to separate the "business logic" from the GUI logic.
+
+This led to the creation of pure, testable functions: `calculate_streak()` and `streak_message()`. While extracting a simple date subtraction into its own `calculate_streak()` function felt initially unnecessary, it proved to be a valuable software engineering exercise. It allowed the program's core rules—such as verifying that a zero-day difference yields a "Checked in for the day!" message and a negative-day difference flags file tampering—to be rigorously tested in `test_project.py` without needing to boot up a graphical window.
